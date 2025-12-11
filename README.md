@@ -16,7 +16,7 @@
 
 ```sql
 -- CREATE DATABASE nascardb;
--- USE DATABASE nascardb;
+-- USE nascardb;
 
 CREATE TABLE [cup series] (
     id INT IDENTITY PRIMARY KEY,
