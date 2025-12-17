@@ -116,42 +116,69 @@ Scaffold-DbContext "Server=(localdb)\MSSQLLocalDB;Database=nascardb;" Microsoft.
 ```
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Server=(localdb)\\MSSQLLocalDB;Database=nascardb;Trusted_Connection=True;"
-  }
+    "DefaultConnectionString": "SERVER=(localdb)\\MSSQLLocalDB;DATABASE=nascardb;"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
 }
 ```
 
 ## 6️⃣ Register DbContext in Program.cs
-```
-using API.Models;
-using Microsoft.EntityFrameworkCore;
+## 📍 Where to add `AddDbContext` in `Program.cs`
 
+Open **Program.cs** and add the following code **INSIDE the service configuration section**,  
+**after** `var builder = WebApplication.CreateBuilder(args);`  
+and **before** `builder.Services.AddControllers();`
+
+---
+
+### ✅ Correct placement
+
+```csharp
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// 👇 ADD THIS HERE
 builder.Services.AddDbContext<NascarDBContext>(options =>
-  options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// 👇 Already existing code
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
 ```
+
+## 7️⃣ Create Controller (Scaffolded API Controller – EntityFramework)
+
+---
+
+### 📁 Steps in Visual Studio
+
+1. Open **Solution Explorer**
+2. Right-click on the **Controllers** folder
+3. Select:
+   **Add** → **New Scaffolded Item…**
+4. Choose:
+   **API Controller with actions, using Entity Framework**
+5. Click **Add**
+
+---
+
+### ⚙️ Scaffold Configuration
+
+Fill in the fields as follows:
+
+| Field | Value |
+|---------------------|-----------------------|
+| **Model class**     | `CupSeries`           |
+| **DbContext class** | `NascarDBContext`     |
+| **Controller name** | `CupSeriesController` |
+
+Then click **Add**.
+
+---
